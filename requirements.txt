@@ -1,0 +1,9 @@
+gradio
+seaborn
+scikit-learn
+statsmodels
+yfinance
+neo4j
+yahoo_fin
+mplfinance
+
