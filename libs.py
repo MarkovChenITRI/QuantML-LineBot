@@ -88,14 +88,14 @@ def tanh(x):
 def forex_risk_test(x, y):
   MEAN, STD = np.mean(x), np.std(x)
   LCL, HCL = (MEAN - STD * 2), (MEAN + STD * 2)
-  _, double_p = stats.ttest_ind(np.random.normal(loc=MEAN, scale=STD * MEAN, size=len(TWD.Close)), x * (y / MEAN), equal_var = False)
+  _, double_p = stats.ttest_ind(np.random.normal(loc=MEAN, scale=STD * MEAN, size=len(x)), x * (y / MEAN), equal_var = False)
   if np.mean(x) > np.mean(y):
     p = double_p/2.
   else:
     p = 1.0 - double_p/2.
   return -(HCL / MEAN - 1) * round(p, 2)
 
-def process(option, portfolio):
+def process(option, portfolio, driver):
   labels, columns = {}, []
   for cls in ["field", "topic", "product", "utility"]:
     query = "MATCH (n:{cls}) RETURN n".format(cls=cls)

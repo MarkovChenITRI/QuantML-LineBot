@@ -6,4 +6,5 @@ yfinance
 neo4j
 yahoo_fin
 mplfinance
-
+openpyxl
+altair
