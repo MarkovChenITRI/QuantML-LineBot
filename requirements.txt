@@ -1,7 +1,9 @@
 gradio
 seaborn
 scikit-learn
-statsmodels
+numpy==1.24.3
+pydeseq2==0.4.3
+statsmodels==0.14.0
 yfinance
 neo4j
 yahoo_fin

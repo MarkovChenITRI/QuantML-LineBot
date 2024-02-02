@@ -149,17 +149,23 @@ def process(option, portfolio, driver):
     state[i] = portfolio[cls]
 
   #取得穩態機率
+  res = {'category': [], 'value': []}
   for _ in range(len(columns)):
     state = state.dot(transition_matrix)
   slack = 1
   for i, j in enumerate(absorbing_node):
     slack -= state[absorbing_node][i]
     print(columns[j], ':', round(state[absorbing_node][i] * 100, 2), '%')
+    res['category'].append(columns[j])
+    res['value'].append(state[absorbing_node][i] * 100)
   print('Cash :', round(slack * 100, 2), '%')
+  res['category'].append("其它")
+  res['value'].append(slack * 100)
   #【市場水位】
   for _ in range(len(columns)):
     level_state = level_state.dot(transition_matrix)
   print('\n市場整體本益比:', round(np.sum(level_state * state), 2))
+  return res
 
 def estimate(df, portfolio):
   beta, sharpe, pe_ratio = 0, 0, 0
@@ -167,4 +173,4 @@ def estimate(df, portfolio):
     beta += float(df[df['name']==name]['BETA']) * portfolio[name]
     sharpe += float(df[df['name']==name]['Sharpe']) * portfolio[name]
     pe_ratio += float(df[df['name']==name]['PE_ratio']) * portfolio[name]
-  print('-------------------\nBeta:', round(beta, 2), ',Sharpe Ratio:', round(sharpe, 2), ',PE Ratio:', round(pe_ratio, 2))
+  return 'Beta係數:' + str(round(beta, 2)) +', Sharpe指標:' + str(round(sharpe, 2)) +', 整體本益狀況:' + str(round(pe_ratio, 2))
