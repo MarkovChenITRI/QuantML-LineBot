@@ -35,7 +35,7 @@ def configuration(Loan_Interest):
   data_melted = data.melt('x', var_name='line', value_name='y')
   chart = alt.Chart(data_melted).mark_line().encode(x='x', y=alt.Y('y', scale=alt.Scale(domain=[0.9, 1.1])), color='line').properties(height=100)
   return chart, {"台幣本位": 0,"美金本位": FOREX_RISK_PER_USD, "歐元本位": FOREX_RISK_PER_EUR, "韓元本位": FOREX_RISK_PER_KRW}, "美股行情指數: " + str(int(US_index * 100)), "台股行情指數: " + str(int(TW_index * 100)), "實質利率: " + str(int(LOAN_INTEREST_PER_TWD * 100)) + "%"
-    
+
 AURA_CONNECTION_URI = "neo4j+s://6d2f5b5d.databases.neo4j.io"
 AURA_USERNAME = "neo4j"
 AURA_PASSWORD = "ZzZ6zeBZ1N7fB_UAHezzHY0LajAXj2z7tmI2HwHPWa8"
