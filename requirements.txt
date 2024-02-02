@@ -2,6 +2,7 @@ kaleido
 cohere
 openai
 tiktoken
+pyts
 gradio
 seaborn
 scikit-learn
