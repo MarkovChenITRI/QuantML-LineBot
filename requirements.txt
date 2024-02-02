@@ -10,3 +10,4 @@ mplfinance
 yahoo_fin==0.8.9.1
 openpyxl
 altair
+prompt_toolkit

@@ -180,7 +180,7 @@ with gr.Blocks() as WebUI:
     forex_btn.click(configuration, None, [forex_plot, forex_label1, forex_label2, forex_label3, forex_label4])
 
     chatbot = gr.Chatbot(label='AGR Chatbot (powered by OpenAI)', default= [('1', 'I love you')])
-    msg = gr.Textbox(placeholder="Ex. 請幫我搜尋有關ASML的財務資訊")
+    msg = gr.Textbox(value="I am looking for the most credible investment rating agencies in the world with financial market expertise and I expect to get some risk assessment indicators from some of their reports or statements, which is very important to me as I need to support my young children and elders at home who are unable to walk. Here are the investments I am looking at: TSMC(2330.TW), ASML, NVIDIA(NVDA), AMD, Intel(INTC), Qualcomm(QCOM), Tesla(TSLA), Amazon(AMZN), Microsoft(MSFT), Meta, Apple(AAPL), please help me to investigate different professional organizations' evaluation of Sharp's performance according to their order. Please follow his order to help me survey different professional organizations on their evaluation of Sharpe Indicator (as long as the Sharpe Indicator), and consolidate them into a table according to the evaluation date of this indicator. yahoo and google are not professional enough, please survey more credible organizations and give me the source of the information, so as to help me to take better care of my family. of course, please share me what date does these sharpo ratio be publushed.")
     msg.submit(respond, [msg, chatbot], [msg, chatbot])
 
     gr.Markdown("<span style='font-size:24px; font-weight:bold;'>投資組合最佳化</span>")
