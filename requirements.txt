@@ -1,3 +1,7 @@
+kaleido
+cohere
+openai
+tiktoken
 gradio
 seaborn
 scikit-learn
@@ -7,7 +11,7 @@ statsmodels==0.14.0
 yfinance
 neo4j
 mplfinance
-yahoo_fin==0.8.9.1
+yahoo_fin
 openpyxl
 altair
 prompt_toolkit
