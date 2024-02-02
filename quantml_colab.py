@@ -30,7 +30,7 @@ history_prices, sharpe_dict, portfolio = {}, {}, {'category': [], 'value': []}
 with driver.session() as session:
     results = session.run(query).data()
     for utility in results:
-      print(utility['u']['name'], utility['u']['code'])
+      print(utility['u'])
       if "sharpo" in utility['u'].keys():
         sharpe_dict[utility['u']['name']], update_time = utility['u']['sharpo'].split('/')
         sharpe_dict[utility['u']['name']] = float(sharpe_dict[utility['u']['name']])
@@ -41,7 +41,6 @@ with driver.session() as session:
         history_prices[utility['u']['name']] = data.loc[:, ['Close']]
         update, price = data.index[-1].strftime('%Y-%m-%d'), data.Close[-1]
         if update != utility['u']['update']:
-          print(utility['u']['code'])
           quote = si.get_quote_table(utility['u']['code'])
           try:
             eps = df.income_stmt.loc['Diluted EPS', :].dropna()[0]
@@ -62,7 +61,7 @@ with driver.session() as session:
 
           query = "MATCH (u:utility WHERE u.name='{name}') set u.update='{update}' set u.price='{price}' set u.eps='{eps}' set u.beta='{beta}' set u.pe_ratio='{pe_ratio}'".format(name=utility['u']['name'], update=update, price=str(price), eps=eps, beta=beta, pe_ratio=pe_ratio)
           session.run(query); print(query)
-
+print(sharpe_dict)
 #################【libs】####################
 def numpy_sma(close, timeperiod):
   sma = np.empty_like(close)
