@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import json, warnings
+import json, warnings, time
 import yfinance as yf
 import mplfinance as mpf
 import pandas as pd
@@ -14,6 +14,7 @@ import matplotlib as mpl
 from scipy.optimize import linprog
 from sklearn.linear_model import LinearRegression
 import gradio as gr
+import altair as alt
 
 #################【initialize】####################
 warnings.simplefilter("ignore", UserWarning)
@@ -30,6 +31,9 @@ with driver.session() as session:
     results = session.run(query).data()
     for utility in results:
       print(utility['u']['name'], utility['u']['code'])
+      if "sharpo" in utility['u'].keys():
+        sharpe_dict[utility['u']['name']], update_time = utility['u']['sharpo'].split('/')
+        sharpe_dict[utility['u']['name']] = float(sharpe_dict[utility['u']['name']])
       df = yf.Ticker(utility['u']['code'])
       data = df.history(period='1y')
       if data.shape[0] > 0:
@@ -319,18 +323,18 @@ with gr.Blocks() as WebUI:
     gr.Markdown("<span style='font-size:28px; font-weight:bold;'>QuantML </span><span style='font-size:20px; font-weight:bold; color:gray;'>(MarkovChen)</span>")
     with gr.Row():
       with gr.Column():
-        forex_label1 = gr.Label(label='世界金融', height=200)
+        forex_label1 = gr.Label(label='世界金融')
         forex_plot = gr.Plot(label='資金流向')
       with gr.Column():
         forex_label2, forex_label3, forex_label4 = gr.Label(label=''), gr.Label(label=''), gr.Label(label='')
       with gr.Column():
         class_option = gr.Dropdown(["field", "topic", "product"], label="投資部位")
-        class_plot = gr.Plot(label='', label_font_size=16)
+        class_plot = gr.Plot(label='')
         class_option.select(portfolio_select, None, class_plot)
     forex_btn = gr.Button("Update")
     forex_btn.click(configuration, None, [forex_plot, forex_label1, forex_label2, forex_label3, forex_label4])
 
-    chatbot = gr.Chatbot(label='AGR Chatbot (powered by OpenAI)', default= [('1', 'I love you')])
+    chatbot = gr.Chatbot(label='AGR Chatbot (powered by OpenAI)')
     msg = gr.Textbox(value="I am looking for the most credible investment rating agencies in the world with financial market expertise and I expect to get some risk assessment indicators from some of their reports or statements, which is very important to me as I need to support my young children and elders at home who are unable to walk. Here are the investments I am looking at: TSMC(2330.TW), ASML, NVIDIA(NVDA), AMD, Intel(INTC), Qualcomm(QCOM), Tesla(TSLA), Amazon(AMZN), Microsoft(MSFT), Meta, Apple(AAPL), please help me to investigate different professional organizations' evaluation of Sharp's performance according to their order. Please follow his order to help me survey different professional organizations on their evaluation of Sharpe Indicator (as long as the Sharpe Indicator), and consolidate them into a table according to the evaluation date of this indicator. yahoo and google are not professional enough, please survey more credible organizations and give me the source of the information, so as to help me to take better care of my family. of course, please share me what date does these sharpo ratio be publushed.")
     msg.submit(respond, [msg, chatbot], [msg, chatbot])
 
