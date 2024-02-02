@@ -6,7 +6,7 @@ pydeseq2==0.4.3
 statsmodels==0.14.0
 yfinance
 neo4j
-yahoo_fin
 mplfinance
+yahoo_fin==0.8.9.1
 openpyxl
 altair

@@ -56,6 +56,7 @@ with driver.session() as session:
         history_prices[utility['u']['name']] = data.loc[:, ['Close']]
         update, price = data.index[-1].strftime('%Y-%m-%d'), data.Close[-1]
         if update != utility['u']['update']:
+          print(utility['u']['code'])
           quote = si.get_quote_table(utility['u']['code'])
           try:
             eps = df.income_stmt.loc['Diluted EPS', :].dropna()[0]
