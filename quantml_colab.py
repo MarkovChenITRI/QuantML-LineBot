@@ -301,15 +301,7 @@ def portfolio_select(evt: gr.SelectData):
   return alt.Chart(pd.DataFrame(process(evt.value, portfolio_pos, driver))).mark_arc().encode(color='category',theta='value').properties(height=300, width=200)
 
 def respond(message, chat_history):
-        time.sleep(5)
-        bot_message = """
-        ASML是一家全球領先的半導體設備製造商，專門提供光刻機和相關服務。ASML的財務資訊包括年報、季報、財務策略、股票回購等，您可以在ASML的投資者關係網站查看詳細內容。以下是一些ASML的財務概況：\n\n
-
-        1. 2023年，ASML的營收達到1,416億歐元，同比增長28.9%；淨利潤為34.6億歐元，同比增長35.7%；每股收益為8.49歐元，同比增長35.2%。\n
-        2. 2023年第四季度，ASML的營收為37.8億歐元，同比增長22.3%；淨利潤為10.3億歐元，同比增長50.8%；每股收益為2.52歐元，同比增長50.6%。\n
-        3. ASML的財務策略是通過股息和股票回購向股東回報現金，並保持一定的財務靈活性。2023年，ASML宣布了一項60億歐元的股票回購計劃，預計在2024年底前完成。此外，ASML還提議將2023年的股息提高15%，達到2.75歐元每股。\n\n
-        希望這些資訊對您有幫助，如果您還有其他問題，歡迎隨時與我聊天。👋
-        """
+        bot_message = """系統暫時關閉, 以免用量爆炸₍ᐢ ̥ ̮ ̥ᐢ₎ """
         chat_history.append((message, bot_message))
         return "", chat_history
 
