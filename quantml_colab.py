@@ -332,5 +332,4 @@ with gr.Blocks() as WebUI:
     gr.Markdown("<span style='font-size:24px; font-weight:bold;'>投資組合最佳化</span>")
     optimizer.render()
 
-if __name__ == "__main__":
-    WebUI.launch()
+WebUI.launch()
