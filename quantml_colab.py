@@ -143,7 +143,7 @@ def forex_risk_test(x, y):
     p = 1.0 - double_p/2.
   return -(HCL / MEAN - 1) * round(p, 2)
 
-def process(option, portfolio, driver):
+def process(option, distribute, driver):
   labels, columns = {}, []
   for cls in ["field", "topic", "product", "utility"]:
     query = "MATCH (n:{cls}) RETURN n".format(cls=cls)
@@ -180,25 +180,33 @@ def process(option, portfolio, driver):
       i, j = np.where(columns==vertex['p'][0]['name'])[0][0], np.where(columns==vertex['p'][2]['name'])[0][0]
       if i not in absorbing_node:
         transition_matrix[i][j] = 1
+      if option != "field":
+        if vertex['p'][2]['name'] in labels["field"]:
+          transition_matrix[j][i] = 1
   for i in range(len(columns)):
     if np.sum(transition_matrix[i]) > 0:
       transition_matrix[i] /= np.sum(transition_matrix[i])
   state = np.zeros((len(columns)))
-  for cls in portfolio:
+  cash = 1
+  for cls in distribute:
     i = np.where(columns==cls)[0][0]
-    state[i] = portfolio[cls]
+    state[i] = distribute[cls]
+    cash -= state[i]
+
   res = {'category': [], 'value': []}
   for _ in range(len(columns)):
     state = state.dot(transition_matrix)
-  slack = 1
+
+  slack = 1 - cash
   for i, j in enumerate(absorbing_node):
     slack -= state[absorbing_node][i]
     print(columns[j], ':', round(state[absorbing_node][i] * 100, 2), '%')
     res['category'].append(columns[j])
     res['value'].append(state[absorbing_node][i] * 100)
-  print('Cash :', round(slack * 100, 2), '%')
-  res['category'].append("其它")
-  res['value'].append(slack * 100)
+  print('Other :', round(slack * 100, 2), '%')
+
+  res['category'].append("其它"); res['value'].append(slack * 100)
+  res['category'].append("現金"); res['value'].append(cash * 100)
   for _ in range(len(columns)):
     level_state = level_state.dot(transition_matrix)
   print('\n市場整體本益比:', round(np.sum(level_state * state), 2))
