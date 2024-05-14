@@ -49,7 +49,7 @@ class Market():
         for i in df:
             if 'Pred' in i:
                 code = i.split('/')[0]
-                for market in option:
+                for market in options:
                     if code in option[market]:
                         options[market].append(i)
         return df, options
