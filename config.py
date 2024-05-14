@@ -44,7 +44,6 @@ class Market():
         print('[Summary from config.Market()]')
         for i in content:
             print(' -', i)
-        df.to_csv(path)
         options = {market: [] for market in pred_options}
         for i in df:
             if 'Pred' in i:
