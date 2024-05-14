@@ -34,7 +34,7 @@ class Market():
                             else:
                                 content.append(f'{cls}/{code}')
                             for col in temp_df:
-                                if 'Pred' in col and flag==True:
+                                if 'Pred' in col and flag==False:
                                     pass
                                 else:
                                     df[col] = temp_df[col]
