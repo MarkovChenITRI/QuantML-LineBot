@@ -1,7 +1,5 @@
 
 from sources import GET
-import warnings
-warnings.filterwarnings("ignore")
 
 class Market():
     def __init__(self):
@@ -17,7 +15,7 @@ class Market():
 
         self.indexes = {"Forex": self.Forex, "Stock": self.China + self.Japan + self.UnitedStates + self.Korea + self.Taiwan + self.Universe}
 
-    def get_data(self, path='./data.csv', default="USDTWD=X"):
+    def get_data(self, pred_options = ["UnitedStates", "Taiwan", "Universe"], path='./data.csv', default="USDTWD=X"):
         df = GET(default)
         content = [f"Forex/{default}"]
         for cls in self.indexes:
@@ -26,9 +24,17 @@ class Market():
                     for _ in range(3):
                         try:
                             temp_df = GET(code)
-                            content.append(f'{cls}/{code}')
+                            flag = False
+                            for market in pred_options:
+                                if code in self.options[market]:
+                                    flag = True
+                            content.append(f'{cls}/{code} (Pred: {flag})')
                             for col in temp_df:
-                                df[col] = temp_df[col]
+                                if 'Pred' in col and flag==True:
+                                    pass
+                                else:
+                                    df[col] = temp_df[col]
+                            
                             break
                         except:
                             pass
