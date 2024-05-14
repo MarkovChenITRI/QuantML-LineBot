@@ -16,6 +16,7 @@ class Market():
         self.indexes = {"Forex": self.Forex, "Stock": self.China + self.Japan + self.UnitedStates + self.Korea + self.Taiwan + self.Universe}
 
     def get_data(self, pred_options = ["UnitedStates", "Taiwan", "Universe"], path='./data.csv', default="USDTWD=X"):
+        print(f'[config.py] Market.get_data()')
         df = GET(default)
         content = [f"Forex/{default}"]
         for cls in self.indexes:

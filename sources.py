@@ -3,7 +3,6 @@ import numpy as np
 from indicators import SMA, STDDEV
 
 def GET(code, timeperiod = 90):
-  print(f'[sources.py] GET({code})')
   temp_df = yf.Ticker(code).history(period='6y')
   temp_df.index = temp_df.index.to_period(freq='D')
 
