@@ -45,4 +45,4 @@ class Market():
         for i in content:
             print(' -', i)
         df.to_csv(path)
-        return df
+        return df, {"market": self.option[market] for market in pred_options}
