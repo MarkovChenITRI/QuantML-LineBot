@@ -28,13 +28,15 @@ class Market():
                             for market in pred_options:
                                 if code in self.options[market]:
                                     flag = True
-                            content.append(f'{cls}/{code} (Pred: {flag})')
+                            if flag == True:
+                                content.append(f'{cls}/{code} (Pred)')
+                            else:
+                                content.append(f'{cls}/{code}')
                             for col in temp_df:
                                 if 'Pred' in col and flag==True:
                                     pass
                                 else:
                                     df[col] = temp_df[col]
-                            
                             break
                         except:
                             pass
