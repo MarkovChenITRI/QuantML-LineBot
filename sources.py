@@ -31,4 +31,4 @@ def GET(code, timeperiod = 90):
   temp_df[code + '/Pred'] = temp_df[code + '/State'].shift(-1)
   res = temp_df.loc[:, [code, code + '/Bias', code + '/Bias1', code + '/Bias2', code + '/Bias3',
                         code + '/State', code + '/State1', code + '/State2', code + '/State3', code + '/Pred']]
-  return res.ffill()
+  return res.ffill().dropna(0)
