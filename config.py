@@ -1,5 +1,7 @@
 
 from sources import GET
+import warnings
+warnings.filterwarnings("ignore")
 
 class Market():
     def __init__(self):
