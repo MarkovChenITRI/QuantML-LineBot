@@ -30,6 +30,6 @@ def GET(code, timeperiod = 90):
   
   #temp_df[code + '/Pred'] = list(np.clip((temp_df[code + '/Bias'].diff(1) / temp_df[code + '/Std']), -1, 1))[1:] + [None]
   temp_df[code + '/Pred'] = temp_df[code + '/State'].shift(-1)
-  res = temp_df.loc[:, [code, code + '/Bias', code + '/Diff1', code + '/Diff2', code + '/Diff3',
-                        code + '/State', code + '/Pred']]
+  res = temp_df.loc[:, [code, code + '/Bias', code + '/Bias1', code + '/Bias2', code + '/Bias3',
+                        code + '/State', code + '/State1', code + '/State2', code + '/State3', code + '/Pred']]
   return res.ffill()
