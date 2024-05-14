@@ -45,7 +45,7 @@ class Market():
         for i in content:
             print(' -', i)
         df.to_csv(path)
-        options = {market: self.options[market] for market in pred_options}
+        options = {market: [] for market in pred_options}
         for i in df:
             if 'Pred' in i:
                 code = i.split('/')[0]
