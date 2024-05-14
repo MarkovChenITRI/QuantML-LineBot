@@ -52,4 +52,4 @@ class Market():
                 for market in options:
                     if code in self.options[market]:
                         options[market].append(i)
-        return df, options
+        return df.ffill.dropna(), options
