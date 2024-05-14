@@ -41,7 +41,7 @@ class Market():
                             break
                         except:
                             pass
-        print('[Summary from config.Market()]\n')
+        print('[Summary from config.Market()]')
         for i in content:
             print(' -', i)
         df.to_csv(path)
@@ -50,6 +50,6 @@ class Market():
             if 'Pred' in i:
                 code = i.split('/')[0]
                 for market in options:
-                    if code in option[market]:
+                    if code in self.options[market]:
                         options[market].append(i)
         return df, options
