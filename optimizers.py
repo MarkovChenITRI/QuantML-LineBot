@@ -1,5 +1,5 @@
 from sklearn.linear_model import LinearRegression
-from sources import Get_Beta
+from sources import Get_Sharpo
 import pandas as pd
 import numpy as np
 
@@ -18,4 +18,9 @@ def Fit_Regressor(df, options, test_size = 0.05):
     model = LinearRegression().fit(X_train, y_train)
     score = model.score(X_test, y_test)
     pred = model.predict(X_test[-1: ])
-    return pd.DataFrame(pred, columns=y_col).apply(tanh), score
+    df = pd.DataFrame(pred, columns=y_col).apply(tanh)
+
+    for i in df:
+    df.loc[len(df.index)] = [Get_Sharpo(i.split('/')[0]) for i in df]
+    df.index = ['Trend', 'Beta']
+    return df, score
