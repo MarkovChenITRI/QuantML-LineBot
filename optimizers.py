@@ -26,8 +26,8 @@ def Fit_Regressor(df, options, test_size = 0.05):
     df.index = ['Trend', 'Beta']
     return df, score
 
-def Distribution_Optimizer(df, market_state, options, market):
-  print(f'[optimizer.py] Distribution_Optimizer()')
+def Shares_Optimizer(df, market_state, options, score, market):
+  print(f'[optimizer.py] Shares_Optimizer()')
   risk_ratio = np.mean(market_state.loc[['Beta'], ['^DJI/Pred', '^GSPC/Pred', '^IXIC/Pred', '^TWII/Pred']]) * score
   market_names = {'NASDAQ': 'UnitedStates', 'TWSE': 'Taiwan', 'ACE': 'Universe', 'NYSE': 'Universe'}
   df['weight'] = [max([0, np.mean(market_state.loc['Trend', options[market_names[i]]])]) for i in df['market']] 
