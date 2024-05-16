@@ -1,2 +1,8 @@
 yfinance
 neo4j
+scikit-learn
+scipy
+pandas
+numpy
+beautifulsoup4
+requests
