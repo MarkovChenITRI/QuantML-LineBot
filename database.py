@@ -3,6 +3,7 @@ from indicators import Get_EPS, Get_PE, Get_Price, Get_Beta, Get_Sharpo
 import yfinance as yf
 
 def Indexes(USD):
+    print(f'[database.py] Indexes()')
     AURA_CONNECTION_URI = "neo4j+s://6d2f5b5d.databases.neo4j.io"
     AURA_USERNAME = "neo4j"
     AURA_PASSWORD = "ZzZ6zeBZ1N7fB_UAHezzHY0LajAXj2z7tmI2HwHPWa8" #@param ["ZzZ6zeBZ1N7fB_UAHezzHY0LajAXj2z7tmI2HwHPWa8"]
