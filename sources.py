@@ -1,7 +1,7 @@
 import requests
-from bs4 import BeautifulSoup
-import yfinance as yf
 import numpy as np
+import yfinance as yf
+from bs4 import BeautifulSoup
 from indicators import SMA, STDDEV, SHARPE
 
 def GET(code, timeperiod = 90):

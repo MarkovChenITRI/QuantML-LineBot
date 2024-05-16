@@ -17,6 +17,6 @@ def STDDEV(close, timeperiod):
         stddev[i] = np.std(window, ddof=0)
     return stddev
 
-def sharpe_ratio(returns, period = 240, adjustment_factor=0):
+def SHARPE(returns, period = 240, adjustment_factor=0):
     returns_risk_adj = returns - adjustment_factor
     return (returns_risk_adj.mean() / returns_risk_adj.std()) * np.sqrt(period)
