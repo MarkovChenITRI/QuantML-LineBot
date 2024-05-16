@@ -6,3 +6,5 @@ pandas
 numpy
 beautifulsoup4
 requests
+secure-smtplib
+email
