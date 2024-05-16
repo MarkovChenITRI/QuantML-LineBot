@@ -18,6 +18,4 @@ def Fit_Regressor(df, options, test_size = 0.05):
     model = LinearRegression().fit(X_train, y_train)
     score = model.score(X_test, y_test)
     pred = model.predict(X_test[-1: ])
-    df = pd.DataFrame(pred, columns=y_col).apply(tanh)
-    df.loc[len(df.index)] = [Get_Beta(i.split('/')[0]) for i in df] 
-    return df, score
+    return pd.DataFrame(pred, columns=y_col).apply(tanh), score

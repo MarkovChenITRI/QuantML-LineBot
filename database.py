@@ -15,12 +15,12 @@ def Indexes(USD):
       utility = [i['u'] for i in session.run("MATCH (u:utility) RETURN u").data()]
       for u in utility:
         temp_df = yf.Ticker(u['code'])
-        updated, price = Get_Price(temp_df, u['market'], USD)
+        update, price = Get_Price(temp_df, u['market'], USD)
         eps = Get_EPS(temp_df, u['market'], USD)
         pe_ratio = Get_PE(temp_df)
         beta = Get_Beta(temp_df)
         sharpo = Get_Sharpo(u['code'])
-        analysis_table.append([u['name'], u['market'], updated, price, eps, pe_ratio, beta, sharpo])
+        analysis_table.append([u['name'], u['market'], update, price, eps, pe_ratio, beta, sharpo])
         
     res_df = pd.DataFrame(analysis_table, columns=['name', 'market', 'update', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo'])
     res_df = res_df.replace(np.nan, None)
@@ -28,10 +28,10 @@ def Indexes(USD):
       res_df[col] = res_df[col].fillna(np.mean(res_df[col]))
 
     with driver.session() as session:
-      for name, updated, price, eps, pe_ratio, beta, sharpo in res_df.values.tolist():
-        session.run("MATCH (u:utility WHERE u.name='{name}')  set u.update='{updated}' set u.price='{price}' set u.eps='{eps}'\
+      for name, market, updated, price, eps, pe_ratio, beta, sharpo in res_df.values.tolist():
+        session.run("MATCH (u:utility WHERE u.name='{name}')  set u.update='{update}' set u.price='{price}' set u.eps='{eps}'\
                     set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=name, 
-                                                                                                      updated=updated,
+                                                                                                      updated=update,
                                                                                                       price=str(price), 
                                                                                                       eps=str(eps), 
                                                                                                       pe_ratio=str(pe_ratio),
