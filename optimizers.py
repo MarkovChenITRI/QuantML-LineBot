@@ -30,7 +30,7 @@ def Distribution_Optimizer(df, market_state, score):
   risk_ratio = np.mean(market_state.loc[['Beta'], ['^DJI/Pred', '^GSPC/Pred', '^IXIC/Pred', '^TWII/Pred']]) * score
 
   print(' - Risk Ratio:', risk_ratio)
-  df['chosed'] = [1 if i in ['NASDAQ', 'TWSE'] else 0 for i in analysis_df['market']]
+  df['chosed'] = [1 if i in ['NASDAQ', 'TWSE'] else 0 for i in df['market']]
   df["X"] = linprog(c    = list(df['sharpo'] * df['chosed'] * -1),
                     A_ub  =  [list(df['beta']),   [1 for _ in range(df.shape[0])]], #coefficient of variables for each constraint
                     b_ub  =  [risk_ratio, 1],    #y value of constraints
