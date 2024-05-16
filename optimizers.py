@@ -5,7 +5,7 @@ import numpy as np
 def tanh(x):
   return (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
 
-def fit_regression(df, options, test_size = 0.05):
+def Fit_Regressor(df, options, test_size = 0.05):
     print(f'[optimizer.py] fit_regression()')
     split_index = int(df.shape[0] * (1 - test_size))
     X_col, y_col = [i for i in df if 'State' in i or 'Bias' in i], []
