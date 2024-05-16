@@ -18,7 +18,7 @@ def Indexes(USD):
         pe_ratio = Get_PE(temp_df)
         beta = Get_Beta(temp_df)
         sharpo = Get_Sharpo(u['code'])
-        analysis_table.append([u['code'], update, price, eps, pe_ratio, beta, sharpo])
+        analysis_table.append([u['code'], updated, price, eps, pe_ratio, beta, sharpo])
         query = "MATCH (u:utility WHERE u.name='{name}')  set u.update='{updated}' set u.price='{price}' set u.eps='{eps}'\
                  set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=u['name'], 
                                                                                                    updated=updated,
