@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from neo4j import GraphDatabase
 from sources import Get_EPS, Get_PE, Get_Price, Get_Beta, Get_Sharpo
 import yfinance as yf
