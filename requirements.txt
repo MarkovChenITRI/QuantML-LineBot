@@ -7,4 +7,4 @@ numpy
 beautifulsoup4
 requests
 secure-smtplib
-email
+email_validator==2.1.1
