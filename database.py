@@ -29,6 +29,5 @@ def Indexes(USD):
                                                                                                       sharpo=str(sharpo),
                                                                                                      )
                     )
-        query
     res_df = pd.DataFrame(analysis_table, columns=['code', 'update', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo'])
     return res_df
