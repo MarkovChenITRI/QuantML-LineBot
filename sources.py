@@ -52,7 +52,7 @@ def Get_EPS(temp_df, market, USD):
     eps = None
   return eps
 
-def Get_PE(code):
+def Get_PE(temp_df):
   try:
     pe = temp_df.info['trailingPE']
   except:
