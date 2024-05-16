@@ -22,7 +22,7 @@ def Indexes(USD):
         sharpo = Get_Sharpo(u['code'])
         analysis_table.append([u['name'], updated, price, eps, pe_ratio, beta, sharpo])
         
-    res_df = pd.DataFrame(analysis_table, columns=['code', 'update', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo'])
+    res_df = pd.DataFrame(analysis_table, columns=['name', 'update', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo'])
     res_df = res_df.replace(np.nan, None)
     for col in res_df.loc[:, ['price', 'eps', 'pe_ratio', 'beta', 'sharpo']]:
       res_df[col] = res_df[col].fillna(np.mean(res_df[col]))
