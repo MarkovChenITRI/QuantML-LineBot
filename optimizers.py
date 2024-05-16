@@ -27,7 +27,7 @@ def Fit_Regressor(df, options, test_size = 0.05):
 
 def Distribution_Optimizer(df, market_state, score):
   risk_ratio = np.mean(market_state.loc[['Beta'], ['^DJI/Pred', '^GSPC/Pred', '^IXIC/Pred', '^TWII/Pred']]) * score
-  df["X"] = linprog(c    = list(df['sharpe'] * -1),
+  df["X"] = linprog(c    = list(df['sharpo'] * -1),
                     A_ub  =  [list(df['beta']),   [1 for _ in range(df.shape[0])]], #coefficient of variables for each constraint
                     b_ub  =  [risk_ratio, 1],    #y value of constraints
                     bounds =  [(0, 1) for _ in range(df.shape[0])], #interval of each variable
