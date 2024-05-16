@@ -1,5 +1,5 @@
 from neo4j import GraphDatabase
-from indicators import Get_EPS, Get_PE, Get_Price, Get_Beta, Get_Sharpo
+from sources import Get_EPS, Get_PE, Get_Price, Get_Beta, Get_Sharpo
 import yfinance as yf
 
 def Indexes(USD):
