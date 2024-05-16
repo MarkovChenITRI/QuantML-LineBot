@@ -19,15 +19,16 @@ def Indexes(USD):
         beta = Get_Beta(temp_df)
         sharpo = Get_Sharpo(u['code'])
         analysis_table.append([u['code'], updated, price, eps, pe_ratio, beta, sharpo])
-        query = "MATCH (u:utility WHERE u.name='{name}')  set u.update='{updated}' set u.price='{price}' set u.eps='{eps}'\
-                 set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=u['name'], 
-                                                                                                   updated=updated,
-                                                                                                   price=str(price), 
-                                                                                                   eps=str(eps), 
-                                                                                                   pe_ratio=str(pe_ratio),
-                                                                                                   beta=str(beta),
-                                                                                                   sharpo=str(sharpo),
-                                                                                                  )
-    session.run(query)
+        session.run("MATCH (u:utility WHERE u.name='{name}')  set u.update='{updated}' set u.price='{price}' set u.eps='{eps}'\
+                    set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=u['name'], 
+                                                                                                      updated=updated,
+                                                                                                      price=str(price), 
+                                                                                                      eps=str(eps), 
+                                                                                                      pe_ratio=str(pe_ratio),
+                                                                                                      beta=str(beta),
+                                                                                                      sharpo=str(sharpo),
+                                                                                                     )
+                    )
+        query
     res_df = pd.DataFrame(analysis_table, columns=['code', 'update', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo'])
     return res_df
