@@ -12,7 +12,7 @@ def Indexes(USD):
       utility = [i['u'] for i in session.run("MATCH (u:utility) RETURN u").data()]
       for u in utility:
         temp_df = yf.Ticker(u['code'])
-        update, price = Get_Price(temp_df, u['market'], USD)
+        updated, price = Get_Price(temp_df, u['market'], USD)
         eps = Get_EPS(temp_df, u['market'], USD)
         pe_ratio = Get_PE(temp_df)
         beta = Get_Beta(temp_df)
@@ -20,7 +20,7 @@ def Indexes(USD):
         analysis_table.append([u['code'], update, price, eps, pe_ratio, beta, sharpo])
         query = "MATCH (u:utility WHERE u.name='{name}')  set u.update='{updated}' set u.price='{price}' set u.eps='{eps}'\
                  set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=u['name'], 
-                                                                                                   updated=updated
+                                                                                                   updated=updated,
                                                                                                    price=str(price), 
                                                                                                    eps=str(eps), 
                                                                                                    pe_ratio=str(pe_ratio),
