@@ -20,7 +20,6 @@ def Fit_Regressor(df, options, test_size = 0.05):
     pred = model.predict(X_test[-1: ])
     df = pd.DataFrame(pred, columns=y_col).apply(tanh)
 
-    for i in df:
     df.loc[len(df.index)] = [Get_Sharpo(i.split('/')[0]) for i in df]
     df.index = ['Trend', 'Beta']
     return df, score
