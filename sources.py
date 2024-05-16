@@ -1,6 +1,8 @@
+import requests
+from bs4 import BeautifulSoup
 import yfinance as yf
 import numpy as np
-from indicators import SMA, STDDEV
+from indicators import SMA, STDDEV, SHARPE
 
 def GET(code, timeperiod = 90):
   temp_df = yf.Ticker(code).history(period='6y')
@@ -32,3 +34,46 @@ def GET(code, timeperiod = 90):
   res = temp_df.loc[:, [code, code + '/Bias', code + '/Bias1', code + '/Bias2', code + '/Bias3',
                         code + '/State', code + '/State1', code + '/State2', code + '/State3', code + '/Pred']]
   return res
+
+def Get_Price(temp_df, market, USD):
+  data = temp_df.history(period='1d')
+  update, price = data.index[-1].strftime('%Y-%m-%d'), float(data.Close[-1])
+  if market == 'TWSE':
+    price /= USD
+  return update, price
+
+def Get_EPS(temp_df, market, USD):
+  try:
+    state_df = temp_df.income_stmt
+    eps = state_df.loc['Diluted EPS', :].dropna()[0]
+    if market == 'TWSE':
+      eps /= USD
+  except:
+    eps = None
+  return eps
+
+def Get_PE(code):
+  try:
+    pe = temp_df.info['trailingPE']
+  except:
+    pe = None
+  return pe
+
+def Get_Beta(temp_df):
+  try:
+    beta = temp_df.info['beta']
+  except:
+    beta = None
+  return beta
+
+def Get_Sharpo(code):
+  web = requests.get(f'https://portfolioslab.com/symbol/{code}')
+  soup = BeautifulSoup(web.text, "html.parser")
+  header_element = soup.find(id='sharpe-ratio')
+  try:
+      res = str(header_element.find_all('b')[1]).replace('<b>', '').replace('</b>', '')
+      return float(res)
+  except:
+      temp_df = yf.download(code, period='6y')['Adj Close'].pct_change().dropna()
+      res = temp_df.rolling(240).apply(SHARPE)[-1]
+      return res
