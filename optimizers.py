@@ -1,4 +1,5 @@
 from sklearn.linear_model import LinearRegression
+from scipy.optimize import linprog
 from sources import Get_Sharpo
 import pandas as pd
 import numpy as np
@@ -23,3 +24,16 @@ def Fit_Regressor(df, options, test_size = 0.05):
     df.loc[len(df.index)] = [Get_Sharpo(i.split('/')[0]) for i in df]
     df.index = ['Trend', 'Beta']
     return df, score
+
+def Distribution_Optimizer(df, market_state, score):
+  risk_ratio = np.mean(market_state.loc[['Beta'], ['^DJI/Pred', '^GSPC/Pred', '^IXIC/Pred', '^TWII/Pred']]) * score
+  df['eps'], df['price'] = df['eps'].astype(float), df['price'].astype(float)
+  df['投資報酬率(%)/年'] = (df['eps'].astype(float) * 100 / df['price']).round(2)
+  df['PE_ratio'] = df['pe_ratio'].replace('nan', np.mean(df['pe_ratio'][9:23].astype(float).dropna())).astype(float)
+  df['BETA'] = df['beta'].replace('nan', np.mean(df['beta'].astype(float).dropna())).astype(float) + (1 - confidence)
+  df["X"] = linprog(c    = list(df['sharpe'] * -1),
+            A_ub  =  [list(df['beta']),   [1 for _ in range(df.shape[0])]], #coefficient of variables for each constraint
+            b_ub  =  [risk_ratio, 1],    #y value of constraints
+            bounds =  [(0, 1) for _ in range(df.shape[0])], #interval of each variable
+            method =  "highs").x
+  return df
