@@ -28,7 +28,7 @@ def Indexes(USD):
       res_df[col] = res_df[col].fillna(np.mean(res_df[col]))
 
     with driver.session() as session:
-      for name, market, updated, price, eps, pe_ratio, beta, sharpo in res_df.values.tolist():
+      for name, market, update, price, eps, pe_ratio, beta, sharpo in res_df.values.tolist():
         session.run("MATCH (u:utility WHERE u.name='{name}')  set u.update='{update}' set u.price='{price}' set u.eps='{eps}'\
                     set u.pe_ratio='{pe_ratio}'  set u.beta='{beta}'  set u.sharpo='{sharpo}'".format(name=name, 
                                                                                                       updated=update,
