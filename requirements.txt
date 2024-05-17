@@ -1,2 +1,10 @@
 yfinance
 neo4j
+scikit-learn
+scipy
+pandas
+numpy
+beautifulsoup4
+requests
+secure-smtplib
+email_validator==2.1.1

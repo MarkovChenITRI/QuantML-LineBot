@@ -19,18 +19,24 @@ def Fit_Regressor(df, options, test_size = 0.05):
     model = LinearRegression().fit(X_train, y_train)
     score = model.score(X_test, y_test)
     pred = model.predict(X_test[-1: ])
-    df = pd.DataFrame(pred, columns=y_col).apply(tanh)
-
+    
+    print(' - Confidence:', score)
+    df = pd.DataFrame(pred, columns=y_col).apply(tanh) * score
     df.loc[len(df.index)] = [Get_Sharpo(i.split('/')[0]) for i in df]
     df.index = ['Trend', 'Beta']
     return df, score
 
-def Distribution_Optimizer(df, market_state, score, risk_ratio, market):
-  print(f'[optimizer.py] Distribution_Optimizer()')
-  df['chosed'] = [1 if i in market else 0 for i in df['market']]
-  df["X"] = linprog(c    = list(df['sharpo'] * df['chosed'] * -1),
-                    A_ub  =  [list(df['beta']),   [1 for _ in range(df.shape[0])]], #coefficient of variables for each constraint
-                    b_ub  =  [risk_ratio, 1],    #y value of constraints
+def Shares_Optimizer(df, market_state, options, score, market):
+  print(f'[optimizer.py] Shares_Optimizer()')
+  risk_ratio = np.mean(market_state.loc[['Beta'], ['^DJI/Pred', '^GSPC/Pred', '^IXIC/Pred', '^TWII/Pred']]) * score
+  market_names = {'NASDAQ': 'UnitedStates', 'TWSE': 'Taiwan', 'ACE': 'Universe', 'NYSE': 'Universe'}
+  df['weight'] = [max([0, np.mean(market_state.loc['Trend', options[market_names[i]]])]) for i in df['market']] 
+  df['chosed'] = [1 if market_names[i] in market else 0 for i in df['market']]
+  
+  df["X"] = linprog(c      =  list(df['sharpo'] * df['chosed'] * df['weight'] * -1),
+                    A_ub   =  [list(df['beta']),   [1 for _ in range(df.shape[0])]], #coefficient of variables for each constraint
+                    b_ub   =  [risk_ratio, 1],    #y value of constraints
                     bounds =  [(0, 1) for _ in range(df.shape[0])], #interval of each variable
                     method =  "highs").x
+  df["X"] = df["X"] * df['weight']
   return df

@@ -1,4 +1,3 @@
-
 from sources import GET
 
 class Market():
