@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from indicators import SMA, STDDEV, SHARPE
 
 def GET(code, timeperiod = 90):
-  temp_df = yf.Ticker(code).history(period='6y')
+  temp_df = yf.Ticker(code).history(period='max')
   temp_df.index = temp_df.index.to_period(freq='D')
 
   temp_df[code] = temp_df.Close
@@ -74,6 +74,6 @@ def Get_Sharpo(code):
       res = str(header_element.find_all('b')[1]).replace('<b>', '').replace('</b>', '')
       return float(res)
   except:
-      temp_df = yf.download(code, period='6y')['Adj Close'].pct_change().dropna()
+      temp_df = yf.download(code, period='max')['Adj Close'].pct_change().dropna()
       res = temp_df.rolling(240).apply(SHARPE)[-1]
       return res
