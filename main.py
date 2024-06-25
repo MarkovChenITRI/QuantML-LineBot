@@ -1,8 +1,10 @@
 import functions_framework, base64, warnings, smtplib
 
 from config import Market
+from indicators import Sensitive_Analysis
 from optimizers import Fit_Regressor, Shares_Optimizer
 from database import Indexes
+from sources import upload_to_imgur, push
 from message import send_message
 from email.mime.text import MIMEText
 
@@ -32,30 +34,77 @@ def hello_pubsub(cloud_event):
     send_message(report)
 
     #e-mail
-    html = ''
+    html = """<html><head><style>.title_font {font-size: 24px;font-weight: bold;}</style></head><body>"""
+    analizer = Sensitive_Analysis()
+    dist_buffer = [(None, None)]
+    
+    df = Shares_Optimizer(analysis_df, market_state, options, score, ['UnitedStates', 'Taiwan', 'Universe'])
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"全市場" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
 
     df = Shares_Optimizer(analysis_df, market_state, options, score, ['UnitedStates', 'Taiwan'])
-    df = df.iloc[:-4, ].loc[:, ["name", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
-    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", 'market', "beta", "sharpo", "X"]]
-    bull.columns = ["Name", 'Market', "Beta", "Sharpe Ratio", "Suggest Position"]
-    html += "台/美股投資組合推薦<br>" + bull.to_html() + "<br>"
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"美股/台股" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
+
+    df = Shares_Optimizer(analysis_df, market_state, options, score, ['UnitedStates', 'Universe'])
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"美股/加密貨幣" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
+
+    df = Shares_Optimizer(analysis_df, market_state, options, score, ['Taiwan', 'Universe'])
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"台股/加密貨幣" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
 
     df = Shares_Optimizer(analysis_df, market_state, options, score, ['UnitedStates'])
-    df = df.iloc[:-4, ].loc[:, ["name", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
-    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", 'market', "beta", "sharpo", "X"]]
-    bull.columns = ["Name", 'Market', "Beta", "Sharpe Ratio", "Suggest Position"]
-    html += "美股投資組合推薦<br>" + bull.to_html() + "<br>"
-
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"純美股" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
+    
     df = Shares_Optimizer(analysis_df, market_state, options, score, ['Taiwan'])
-    df = df.iloc[:-4, ].loc[:, ["name", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
-    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", 'market', "beta", "sharpo", "X"]]
-    bull.columns = ["Name", 'Market', "Beta", "Sharpe Ratio", "Suggest Position"]
-    html += "台股投資組合推薦<br>" + bull.to_html() + "<br>"
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"純台股" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
 
-    html += "本系統上的所有資訊僅供參考之用，並不構成財務或投資建議。在做出任何投資決定之前，我們建議您尋求獨立的財務建議。"
+    df = Shares_Optimizer(analysis_df, market_state, options, score, ['Universe'])
+    df = df.iloc[:-4, ].loc[:, ["name", "price", 'market', "pe_ratio", "beta", "sharpo", "X"]].round(2)
+    bull = df.where(df['X'] > 0).dropna().loc[:, ["name", "price", "X"]]
+    bull.columns = ["Name", "Price (USD)", "Suggest Position"]
+    if bull.shape[0] > 0:
+      html += '<p class="title_font">"純加密貨幣" 現貨投資組合推薦<br>' + bull.to_html() + "</p>"
+      img_str, dist = analizer.fit(bull)
+      html, dist_buffer = push(img_str, dist, dist_buffer, html)
+
+    html += "<br>本系統上的所有資訊僅供參考之用，並不構成財務或投資建議。在做出任何投資決定之前，我們建議您尋求獨立的財務建議。"
 
     #send email
-    whitelist = ["markov.chen1996@gmail.com", "Kepitlo@gmail.com", "lzy871119@gmail.com"]
+    whitelist = ["markov.chen1996@gmail.com", "Kepitlo@gmail.com", "lzy871119@gmail.com", "sylviia.chan@gmail.com"]
 
     mime=MIMEText(html, "html", "utf-8")
     mime["Subject"]="本日投資組合及分配比例 (系統自動發送)"

@@ -10,3 +10,6 @@ requests
 secure-smtplib
 email_validator==2.1.1
 line-bot-sdk
+matplotlib
+Pillow
+seaborn

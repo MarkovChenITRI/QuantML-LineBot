@@ -4,6 +4,37 @@ import yfinance as yf
 from bs4 import BeautifulSoup
 from indicators import SMA, STDDEV, SHARPE
 
+def push(img_str, dist, dist_buffer, html):
+  dist_match = False
+  for i, j in dist_buffer:
+    if i == dist:
+      dist_match, image_url = True, j
+  if dist_match == False:
+    try:
+      image_url = upload_to_imgur(img_str)
+      dist_buffer.append((dist, image_url))
+      html += f'<img src="{image_url}">'
+    except:
+      html += f'<br>(Rate limiting)<br>'
+  else:
+    html += f'<img src="{image_url}">'
+  print(dist_buffer)
+  return html, dist_buffer
+  
+def upload_to_imgur(img_str):
+  response = requests.post(
+    "https://api.imgur.com/3/image",
+    headers={
+      "Authorization": "869c052fc7ddbfe 94de4c79d7c297349dc2ef16aadb283e5ea17b41",
+    },
+    data={
+      "image": img_str,
+    },
+  )
+  data = response.json()
+  print(data)
+  return data["data"]["link"]
+
 def GET(code, timeperiod = 90):
   temp_df = yf.Ticker(code).history(period='max')
   temp_df.index = temp_df.index.to_period(freq='D')
