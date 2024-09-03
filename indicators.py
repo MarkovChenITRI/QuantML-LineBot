@@ -5,6 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
 
+def kelly_criterion(win_probability, win_odds):
+  return (win_probability * win_odds - (1 - win_probability)) / win_odds
+
 def SMA(close, timeperiod):
   sma = np.empty_like(close)
   for i in range(len(close)):

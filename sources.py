@@ -37,7 +37,7 @@ def upload_to_imgur(img_str):
 
 def GET(code, timeperiod = 90):
   temp_df = yf.Ticker(code).history(period='max')
-  temp_df.index = temp_df.index.to_period(freq='D')
+  temp_df.index = temp_df.index.tz_localize(None).to_period(freq='D')
 
   temp_df[code] = temp_df.Close
   temp_df[code + '/Mean'] = SMA(temp_df.Close, timeperiod = timeperiod)
@@ -63,7 +63,7 @@ def GET(code, timeperiod = 90):
   #temp_df[code + '/Pred'] = list(np.clip((temp_df[code + '/Bias'].diff(1) / temp_df[code + '/Std']), -1, 1))[1:] + [None]
   temp_df[code + '/Pred'] = temp_df[code + '/State'].shift(-1)
   res = temp_df.loc[:, [code, code + '/Bias', code + '/Bias1', code + '/Bias2', code + '/Bias3',
-                        code + '/State', code + '/State1', code + '/State2', code + '/State3', code + '/Pred']]
+                        code + '/State', code + '/State1', code + '/State2', code + '/State3', code + '/Mean', code + '/Std', code + '/Pred']]
   return res
 
 def Get_Price(temp_df, market, USD):
