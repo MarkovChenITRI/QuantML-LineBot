@@ -104,7 +104,7 @@ def hello_pubsub(cloud_event):
     html += "<br>本系統上的所有資訊僅供參考之用，並不構成財務或投資建議。在做出任何投資決定之前，我們建議您尋求獨立的財務建議。"
 
     #send email
-    whitelist = ["markov.chen1996@gmail.com", "Kepitlo@gmail.com", "lzy871119@gmail.com", "sylviia.chan@gmail.com"]
+    whitelist = ["markov.chen1996@gmail.com", "Kepitlo@gmail.com", "lzy871119@gmail.com", "sces60206@gmail.com", "sylviia.chan@gmail.com"]
 
     mime=MIMEText(html, "html", "utf-8")
     mime["Subject"]="本日投資組合及分配比例 (系統自動發送)"
