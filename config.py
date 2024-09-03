@@ -8,7 +8,7 @@ class Market():
         self.Korea = ['^KS11']
         self.Taiwan = ['^TWII']
         self.Universe = ['BTC-USD', 'ETH-USD']
-        self.debt = ['^TNX']
+        self.debt = ['^TNX', 'GC=F']
         self.options = {"China": self.China, "Japan": self.Japan, "UnitedStates": self.UnitedStates, "Korea": self.Korea, "Taiwan": self.Taiwan, "Universe": self.Universe}
 
         self.Forex = ['GC=F', 'USDCNY=X', 'USDJPY=X', 'USDEUR=X', 'USDHKD=X', 'USDKRW=X']
