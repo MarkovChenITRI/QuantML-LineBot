@@ -5,6 +5,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from PIL import Image
 
+def reverse_transform(temp_df, code, pred, score, ticks = 100, leverage = 20):
+    normalize = lambda x: int(x/100) * 100
+    CURRENTED_PRICE = list(temp_df[code])[-1]
+    EXPECTED_PRICE = list(temp_df[f"{code}/Mean"])[-1] + list(temp_df[f"{code}/Std"])[-1] * pred * 3
+    TARGET_PRICE = normalize(EXPECTED_PRICE)
+    STATUS = np.clip(normalize(CURRENTED_PRICE) - TARGET_PRICE, -1, 1) * score
+    POSITION = kelly_criterion(abs(STATUS * score), abs(TARGET_PRICE / normalize(CURRENTED_PRICE) - 1) * leverage + 1)
+    return CURRENTED_PRICE, EXPECTED_PRICE, TARGET_PRICE, STATUS, np.clip(POSITION, 0, 1)
+
 def kelly_criterion(win_probability, win_odds):
   return (win_probability * win_odds - (1 - win_probability)) / win_odds
 
