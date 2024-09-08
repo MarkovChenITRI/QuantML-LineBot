@@ -103,7 +103,7 @@ class UtilityMarket():
         df['chosed'] = [1 if market in valid_market else 0 for market in df['market']]
         df = df[df['chosed'] == 1]
         market_risks = {market: np.mean(df[df['market'] == market]['beta']) for market in set(list(df['market']))}
-        df['risk_limit'] = [max([0.0000001, market_risks[market] * futures_df.loc[market, 'status']]) for market in df['market']] #
+        df['risk_limit'] = [max([0.0000001, market_risks[market] * futures_df.loc[market, 'status']]) for market in df['market']]
         df.loc[df.index[-1],:] = ['TWD', '', ''] + [1 for i in range(7)]
         df['risk'] = list(df['beta'] - df['risk_limit']) / df['risk_limit']
 
@@ -112,5 +112,6 @@ class UtilityMarket():
                     b_ub   =  [1, 1],    #y value of constraints
                     bounds =  [(0, 1) for _ in range(df.shape[0])], #interval of each variable
                     method =  "highs").x
+        df = df.set_index('name')
         df["X"] = np.round(df["X"], 2)
-        return df.loc[:, ['name', 'price', 'eps', 'pe_ratio', 'beta', 'sharpo', 'X']]
+        return df.loc[:, ['price', 'eps', 'pe_ratio', 'beta', 'sharpo', 'X']].set_index('name')
