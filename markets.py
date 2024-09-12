@@ -114,4 +114,4 @@ class UtilityMarket():
                     method =  "highs").x
         df = df.set_index('name')
         df["X"] = np.round(df["X"], 2)
-        return df.loc[:, ['price', 'eps', 'pe_ratio', 'beta', 'sharpo', 'X']].set_index('name')
+        return df.loc[:, ['price', 'eps', 'pe_ratio', 'beta', 'sharpo', 'X']]
