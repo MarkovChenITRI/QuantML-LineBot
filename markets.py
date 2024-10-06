@@ -21,38 +21,41 @@ class GlobalMarket():
 
     def summary(self, retry_time = 3):
         print(f'GlobalMarket.summary()')
-        df = GetCodeIndexes("USDTWD=X").tz_convert('Asia/Taipei')
-        df.index = df.index.date
+        self.df = GetCodeIndexes("USDTWD=X").tz_convert('Asia/Taipei')
+        self.df.index = self.df.index.date
         for market in self.CODES:
             for code in self.CODES[market]:
                 for _ in range(retry_time):
-                    try:
-                        temp_df = GetCodeIndexes(code).tz_convert('Asia/Taipei')
-                        temp_df.index = temp_df.index.date
-                        df = pd.merge(df, temp_df, left_index=True, right_index=True)
-                        break
-                    except:
-                        pass
-        self.df = df.ffill().dropna()
+                    #try:
+                    self.add(code)
+                    break
+                    #except:
+                    #    pass
         return self.df
 
-    def predict(self,  code):
+    def add(self, code):
+      if code not in self.df.columns:
+        temp_df = GetCodeIndexes(code).tz_convert('Asia/Taipei')
+        temp_df.index = temp_df.index.date
+        temp_df = temp_df[~temp_df.index.duplicated(keep='first')]
+        self.df = pd.concat([self.df, temp_df.loc[self.df.index[0]:, ]], axis=1).sort_index()
+        print(' -', code, 'added to dataset.', self.df.shape)
+      self.df = self.df.ffill().dropna()
+
+
+    def predict(self,  code, delay = None):
+      self.add(code)
+      if delay is None:
         df = self.df.copy()
-        col = f'{code}/Pred'
-        if col not in df.columns:
-            temp_df = GetCodeIndexes(code).tz_convert('Asia/Taipei')
-            temp_df.index = temp_df.index.date
-            df = pd.merge(df, temp_df, left_index=True, right_index=True)
-        y_col = [col]
-        X_col = [i for i in df if 'State' in i or 'Bias' in i]
-
-        split_index = int(df.shape[0] * (1 - 0.05))
-        input, label = np.array(df.copy().loc[: , X_col]), np.array(df.copy().loc[: , y_col])
-        X_train, y_train, X_test, y_test = input[: split_index], label[: split_index], input[split_index: ], label[split_index: ]
-
-        model = LinearRegression().fit(X_train, y_train)
-        pred, score = model.predict(X_test[-1: ]), model.score(X_test, y_test)
-        return pred, score
+      else:
+        df = self.df.copy().iloc[: delay, ]
+      print('Prediction Used Date:', df.index[-1])
+      long_index, short_index = int(df.shape[0] - 90), int(df.shape[0] - 5)
+      y_col, X_col = [f'{code}/Pred'], [i for i in df if 'State' in i or 'Bias' in i]
+      input, label = np.array(df.copy().loc[: , X_col]), np.array(df.copy().loc[: , y_col])
+      model = LinearRegression().fit(input[: short_index], label[: short_index])
+      pred, short_score, long_score = model.predict(input[-1: ])[0][0], model.score(input[short_index: ], label[short_index: ]), model.score(input[long_index: ], label[long_index: ])
+      return pred, int(list(df[code])[-1]), short_score, long_score
 
 class UtilityMarket():
     def __init__(self):
