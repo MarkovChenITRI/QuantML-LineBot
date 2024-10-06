@@ -63,7 +63,7 @@ def UploadImage(img_str):
   return data["data"]["link"]
 
 def GetCodeIndexes(code, timeperiod = 90):
-  temp_df = yf.Ticker(code).history(period='max')
+  temp_df = yf.Ticker(code).history(period='max').sort_index()
   temp_df[code] = temp_df.Close
   temp_df[code + '/Mean'] = SMA(temp_df.Close, timeperiod = timeperiod)
   temp_df[code + '/Std'] = STDDEV(temp_df.Close, timeperiod = timeperiod)
