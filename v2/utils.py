@@ -164,7 +164,7 @@ from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.model_selection import GridSearchCV
 
-def Optimizer(prices, short_pred, long_pred, threadhold = 0.7):
+def Optimizer(prices, short_pred, long_pred):
   pca = PCA(n_components=6)
   X = pca.fit_transform(np.concatenate((short_pred, long_pred), axis = 1))
   y = action_function(prices)
