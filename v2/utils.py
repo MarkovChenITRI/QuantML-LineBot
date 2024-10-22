@@ -145,3 +145,35 @@ class TwoLayerLSTM:
     @property
     def trainable_variables(self):
         return self.lstm_cell_1.trainable_variables + self.lstm_cell_2.trainable_variables + self.dense_layer.trainable_variables
+
+###########[  optimize  ]############
+def action_function(prices):
+    actions = []
+    for i in range(len(prices)):
+      current_price = prices[i]
+      future_price = prices[min([i + 5, len(prices) - 1])]
+      if future_price > current_price:
+        actions.append(2)
+      elif future_price < current_price:
+        actions.append(0)
+      else:
+        actions.append(1)
+    return np.array(actions)
+
+from sklearn.decomposition import PCA
+from sklearn.tree import DecisionTreeClassifier, export_text
+from sklearn.model_selection import GridSearchCV
+
+def Optimizer(short_pred, long_pred, threadhold = 0.7):
+  pca = PCA(n_components=6)
+  X = pca.fit_transform(np.concatenate((short_pred, long_pred), axis = 1))
+  y = action_function(list(df['^TWII'])[1:])
+
+  grid_search = GridSearchCV(DecisionTreeClassifier(), {'max_depth': np.arange(3, 30)}, cv=10, scoring='accuracy') # 5-fold cross-validation, using accuracy
+  grid_search.fit(X, y)
+  print("Best max_depth:", grid_search.best_params_['max_depth'], "score:", grid_search.best_score_)
+  clf = DecisionTreeClassifier(max_depth=grid_search.best_params_['max_depth'])
+  clf.fit(X, y)
+  tree_rules = export_text(clf, feature_names=[f"Feature_{i}" for i in range(X.shape[1])])
+  stree_rules
+  return np.array([clf.predict_proba(np.array([x]))[0] for x in X])
