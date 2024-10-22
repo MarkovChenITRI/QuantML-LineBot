@@ -177,3 +177,11 @@ def Optimizer(prices, short_pred, long_pred, threadhold = 0.7):
   tree_rules = export_text(clf, feature_names=[f"Feature_{i}" for i in range(X.shape[1])])
   print(stree_rules)
   return np.array([clf.predict_proba(np.array([x]))[0] for x in X])
+
+###########[  message  ]############
+from linebot import LineBotApi
+from linebot.models import TextSendMessage
+
+def SendMessage(text='Meow!!!'):
+  line_bot_api = LineBotApi('Es+feMvp7Uwg+nIcgB66iAKWVD1dOKRcXzYwPmSbko+b0Vf21iko3s7dRwEFX1tfToR8mrW78XUACEd/uyecCF/Uqd9LgvkchpPEPiODdX4L8BU4b6pXHzFvlDoAfsP9xIFSMG+rmVzQURS+7uBnegdB04t89/1O/w1cDnyilFU=')
+  line_bot_api.push_message('Udba3ff0abbe6607af5a5cfc2e2ddc8a1', TextSendMessage(text=text))
