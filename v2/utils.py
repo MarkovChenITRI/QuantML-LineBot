@@ -164,10 +164,10 @@ from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeClassifier, export_text
 from sklearn.model_selection import GridSearchCV
 
-def Optimizer(short_pred, long_pred, threadhold = 0.7):
+def Optimizer(prices, short_pred, long_pred, threadhold = 0.7):
   pca = PCA(n_components=6)
   X = pca.fit_transform(np.concatenate((short_pred, long_pred), axis = 1))
-  y = action_function(list(df['^TWII'])[1:])
+  y = action_function(prices)
 
   grid_search = GridSearchCV(DecisionTreeClassifier(), {'max_depth': np.arange(3, 30)}, cv=10, scoring='accuracy') # 5-fold cross-validation, using accuracy
   grid_search.fit(X, y)
