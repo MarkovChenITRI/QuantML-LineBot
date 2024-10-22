@@ -175,5 +175,5 @@ def Optimizer(short_pred, long_pred, threadhold = 0.7):
   clf = DecisionTreeClassifier(max_depth=grid_search.best_params_['max_depth'])
   clf.fit(X, y)
   tree_rules = export_text(clf, feature_names=[f"Feature_{i}" for i in range(X.shape[1])])
-  stree_rules
+  print(stree_rules)
   return np.array([clf.predict_proba(np.array([x]))[0] for x in X])
