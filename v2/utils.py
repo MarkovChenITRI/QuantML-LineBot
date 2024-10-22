@@ -74,7 +74,7 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.model_selection import train_test_split
 
 def Split_Dataset(df, window_size = 1, train_ratio = 0.8, delay_period = 5):
-    df = market_df.copy().iloc[:-delay_period, :]
+    df = df.copy().iloc[:-delay_period, :]
 
     X, y = np.array(df.loc[:, [i for i in df if 'State' in i or 'Bias' in i]]), np.array(df.loc[:, ['^TWII/Pred']])
     encoder = OneHotEncoder(handle_unknown='ignore')
